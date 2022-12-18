@@ -5,9 +5,9 @@ from domain.models.user import User
 
 class UsersRepository(ABC):
     @abstractmethod
-    def add(self, user: User) -> User or None:
+    def add(self, username: str, password: str) -> User or None:
         pass
 
     @abstractmethod
-    def get_by_credentials(self, username: str, password: str) -> User or None:
+    def get_by_name(self, username: str) -> User or None:
         pass

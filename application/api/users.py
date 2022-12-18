@@ -1,6 +1,7 @@
 import datetime
 import json
 
+import bcrypt
 from flask import Response
 from flask.views import MethodView
 from flask_smorest import Blueprint
@@ -23,7 +24,12 @@ class UsersRegister(MethodView):
     @users.response(201)
     @users.response(403)
     def post(self, credentials):
-        return Response(status=403)
+        result = self.users_repository.add(**credentials)
+
+        if result is None:
+            return Response(status=403)
+
+        return Response(status=201)
 
 
 @users.route("/login")
@@ -35,12 +41,19 @@ class UsersRegister(MethodView):
 
     @users.arguments(UserCredentialsSchema)
     @users.response(201)
+    @users.response(403)
     @users.response(404)
     def post(self, credentials: UserCredentialsSchema):
-        user = self.users_repository.get_by_credentials(**credentials)
+        user = self.users_repository.get_by_name(credentials["username"])
 
         if user is None:
             return Response(status=404)
+
+        input_pass_bytes = credentials["password"].encode("utf-8")
+        is_correct_pass = bcrypt.checkpw(input_pass_bytes, user.password)
+
+        if not is_correct_pass:
+            return Response(status=403)
 
         payload = {
             "id": user.id,

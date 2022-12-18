@@ -58,6 +58,7 @@ class WaypointsById(MethodView):
     @waypoints.arguments(WaypointSchema)
     @waypoints.response(200)
     @waypoints.response(404)
+    @auth(Roles.Admin)
     def put(self, waypoint, waypoint_id):
         result = self.waypoints_repository.update(waypoint, waypoint_id)
 
@@ -67,6 +68,7 @@ class WaypointsById(MethodView):
         return Response(status=200)
 
     @waypoints.response(202)
+    @auth(Roles.Admin)
     def delete(self, waypoint_id):
         self.waypoints_repository.delete(waypoint_id)
 

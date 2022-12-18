@@ -6,5 +6,5 @@ from domain.enums.roles import Roles
 class User:
     id: str
     username: str
-    password: str
+    password: bytes
     role: Roles
