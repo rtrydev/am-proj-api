@@ -9,6 +9,7 @@ flask-cors = "3.0.10"
 flask-smorest = "0.40.0"
 flask-injector = "0.20.1"
 pyjwt = "2.6.0"
+waitress = "*"
 
 [dev-packages]
 
