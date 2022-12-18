@@ -50,3 +50,11 @@ class InMemoryUsersRepository(UsersRepository):
         )
 
         return user
+
+    def get_by_id(self, user_id: str) -> User or None:
+        db = self.db_provider.get_db()
+
+        if db is None or db.get("users") is None:
+            return None
+
+        return User(**db["users"].get(user_id))

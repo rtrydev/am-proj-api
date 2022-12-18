@@ -2,12 +2,16 @@ import datetime
 import json
 
 import bcrypt
-from flask import Response
+import jwt
+from flask import Response, request
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from injector import inject
 
+from application.decorators.auth_decorator import auth
 from application.schemas.user_credentials_schema import UserCredentialsSchema
+from application.schemas.user_read_schema import UserReadSchema
+from domain.enums.roles import Roles
 from domain.repositories.users_repository import UsersRepository
 from domain.services.auth_service import AuthService
 
@@ -68,3 +72,32 @@ class UsersRegister(MethodView):
             }),
             status=200
         )
+
+
+@users.route("/")
+class Users(MethodView):
+    @inject
+    def __init__(self, users_repository: UsersRepository):
+        self.users_repository = users_repository
+
+    @users.response(200, UserReadSchema)
+    @users.response(404)
+    @users.response(401)
+    @auth(Roles.User)
+    def get(self):
+        token = request.headers.get('Authorization').replace("Bearer ", "")
+        claims = dict(jwt.decode(token, options={"verify_signature": False}))
+        user_id = claims.get("id")
+
+        user = self.users_repository.get_by_id(user_id)
+
+        if user is None:
+            return Response(status=404)
+
+        result = {
+            "id": user.id,
+            "username": user.username,
+            "role": user.role
+        }
+
+        return Response(json.dumps(result), 200)
