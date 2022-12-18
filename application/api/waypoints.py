@@ -6,6 +6,8 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from injector import inject
 
+from application.decorators.auth_decorator import auth
+from domain.enums.roles import Roles
 from domain.repositories.waypoint_repository import WaypointRepository
 from application.schemas.waypoint_schema import WaypointSchema
 
@@ -25,8 +27,8 @@ class Waypoints(MethodView):
     @waypoints.arguments(WaypointSchema)
     @waypoints.response(201)
     @waypoints.response(403)
+    @auth(Roles.Admin)
     def post(self, waypoint):
-        print(waypoint)
         result = self.waypoints_repository.add(waypoint)
 
         if result is None:

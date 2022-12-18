@@ -1,3 +1,4 @@
+from domain.enums.roles import Roles
 from infrastructure.database.database_provider import DatabaseProvider
 
 
@@ -24,7 +25,18 @@ class InMemoryDatabaseProvider(DatabaseProvider):
             }
         },
         "questions": {},
-        "users": {}
+        "users": {
+            "test1": {
+                "username": "test",
+                "password": "Test",
+                "role": Roles.User
+            },
+            "test2": {
+                "username": "admin",
+                "password": "admin",
+                "role": Roles.Admin
+            }
+        }
     }
 
     def get_db(self):
