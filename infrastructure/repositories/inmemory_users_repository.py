@@ -1,4 +1,3 @@
-import json
 import uuid
 
 import bcrypt
@@ -24,15 +23,16 @@ class InMemoryUsersRepository(UsersRepository):
         if self.get_by_name(username) is not None:
             return None
 
+        user_id = str(uuid.uuid4())
+
         salt = bcrypt.gensalt()
         user = {
-            "id": str(uuid.uuid4()),
             "username": username,
             "password": bcrypt.hashpw(password.encode("utf-8"), salt),
             "role": Roles.User
         }
 
-        db["users"][user["id"]] = user
+        db["users"][user_id] = user
 
         return user
 
@@ -43,8 +43,8 @@ class InMemoryUsersRepository(UsersRepository):
             return None
 
         user = next(
-            (User(**user)
-             for _, user in db["users"].items()
+            (User(user_id, **user)
+             for user_id, user in db["users"].items()
              if user["username"] == username),
             None
         )
@@ -57,4 +57,4 @@ class InMemoryUsersRepository(UsersRepository):
         if db is None or db.get("users") is None:
             return None
 
-        return User(**db["users"].get(user_id))
+        return User(user_id, **db["users"].get(user_id))
