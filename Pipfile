@@ -15,6 +15,8 @@ sqlalchemy = "1.4.45"
 flask-sqlalchemy = "3.0.2"
 
 [dev-packages]
+alembic = "1.9.0"
+psycopg2-binary = "2.9.5"
 
 [requires]
 python_version = "3.10"
