@@ -1,3 +1,5 @@
+import os
+
 from injector import singleton
 
 from domain.repositories.question_answers_repository import QuestionAnswersRepository
@@ -15,9 +17,23 @@ from infrastructure.services.jwt_service import JwtService
 
 
 def configure(binder):
+    use_persistent_db = os.environ.get("PERSISTENT_DB") is True
+
+    if not use_persistent_db:
+        _bind_inmemory_db(binder)
+    else:
+        _bind_persistent_db(binder)
+
+    binder.bind(AuthService, to=JwtService, scope=singleton)
+
+
+def _bind_inmemory_db(binder):
     binder.bind(DatabaseProvider, to=InMemoryDatabaseProvider, scope=singleton)
     binder.bind(WaypointRepository, to=InMemoryWaypointRepository, scope=singleton)
     binder.bind(UsersRepository, to=InMemoryUsersRepository, scope=singleton)
     binder.bind(QuestionRepository, to=InMemoryQuestionRepository, scope=singleton)
     binder.bind(QuestionAnswersRepository, to=InMemoryQuestionAnswersRepository, scope=singleton)
-    binder.bind(AuthService, to=JwtService, scope=singleton)
+
+
+def _bind_persistent_db(binder):
+    pass
