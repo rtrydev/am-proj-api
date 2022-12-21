@@ -22,7 +22,6 @@ class InMemoryQuestionAnswersRepository(QuestionAnswersRepository):
         answers_for_user = [
             {
                 "id": key,
-                "user_id": answer.get("user_id"),
                 "question_id": answer.get("question_id"),
                 "answer_id": answer.get("answer_id")
             }

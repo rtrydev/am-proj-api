@@ -1,3 +1,4 @@
+import dataclasses
 import json
 
 import jwt
@@ -34,7 +35,9 @@ class QuestionAnswers(MethodView):
 
         result = self.question_answers_repository.get_answers_for_user(user_id)
 
-        return Response(json.dumps(result), status=200)
+        schema_result = QuestionAnswerSchema(many=True).dumps(result)
+
+        return Response(schema_result, status=200, mimetype="application/json")
 
     @question_answers.arguments(QuestionAnswerSchema)
     @question_answers.response(201)

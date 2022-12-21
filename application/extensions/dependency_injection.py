@@ -1,7 +1,10 @@
 import os
 
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from injector import singleton
 
+from application.extensions.database import configure_db
 from domain.repositories.question_answers_repository import QuestionAnswersRepository
 from domain.repositories.question_repository import QuestionRepository
 from domain.repositories.users_repository import UsersRepository
@@ -36,4 +39,10 @@ def _bind_inmemory_db(binder):
 
 
 def _bind_persistent_db(binder):
-    pass
+    app = binder.injector.get(Flask)
+    db = configure_db(app)
+
+    binder.bind(SQLAlchemy, to=db, scope=singleton)
+
+
+
