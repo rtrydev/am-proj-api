@@ -38,10 +38,19 @@ class InMemoryQuestionAnswersRepository(QuestionAnswersRepository):
         if db is None or db.get("question_answers") is None:
             return None
 
+        if db["questions"].get(question_id) is None:
+            return None
+
+        if not any(answer
+                   for answer in db["questions"][question_id].get("answers")
+                   if answer.get("answer_id") == answer_id
+                   ):
+            return None
+
         if any(key
-           for key, answer in db["question_answers"].items()
-           if answer.get("user_id") == user_id and answer.get("question_id") == question_id
-        ):
+               for key, answer in db["question_answers"].items()
+               if answer.get("user_id") == user_id and answer.get("question_id") == question_id
+               ):
             return None
 
         entry_id = str(uuid.uuid4())

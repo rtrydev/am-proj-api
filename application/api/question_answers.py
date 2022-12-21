@@ -50,8 +50,8 @@ class QuestionAnswers(MethodView):
             return Response(status=403)
 
         result = self.question_answers_repository.add(
-            question_answer.question_id,
-            question_answer.answer_id,
+            question_answer.get("question_id"),
+            question_answer.get("answer_id"),
             user_id
         )
 
