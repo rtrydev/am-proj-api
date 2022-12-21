@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True, default=generate_uuid)
-    username = Column(String)
+    username = Column(String, unique=True)
     password = Column(LargeBinary)
     role = Column(Integer)
     question_answers = relationship("QuestionAnswer", back_populates="user", lazy="dynamic")
