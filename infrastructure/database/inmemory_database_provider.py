@@ -24,13 +24,39 @@ class InMemoryDatabaseProvider(DatabaseProvider):
                 "coordinateY": 24.1235
             }
         },
-        "questions": {},
+        "questions": {
+            "9aa37887-7360-4d12-82c5-67a3d2a96833": {
+                "contents": "2+4?",
+                "answers": [
+                    {
+                        "answer_id": "a42ed6ce-a264-4683-8dba-9895e2aff5a5",
+                        "text": "3"
+                    },
+                    {
+                        "answer_id": "ba08dff4-515c-4c16-ac78-611733e58a7a",
+                        "text": "6"
+                    },
+                    {
+                        "answer_id": "d6b242a6-395b-4be0-b058-e9e53c5b33e0",
+                        "text": "-14"
+                    },
+                ],
+                "correct_answer_id": "ba08dff4-515c-4c16-ac78-611733e58a7a"
+            }
+        },
         "users": {
             "7215f897-2ef5-4359-86bc-06aed1c2b811": {
                 "username": "rtry",
                 "password": "$2b$12$ZB81eVxtSN2ZFNmgC0s/6OzOtVtagEDh7aPfh5rHSClYbQJOq5JNK".encode("utf-8"),
                 "role": Roles.Admin,
                 "question_answers": []
+            }
+        },
+        "question_answers": {
+            "8411884b-2325-4e84-a327-b8fa47ff4a9e": {
+                "user_id": "7215f897-2ef5-4359-86bc-06aed1c2b811",
+                "question_id": "9aa37887-7360-4d12-82c5-67a3d2a96833",
+                "answer_id": "ba08dff4-515c-4c16-ac78-611733e58a7a"
             }
         }
     }

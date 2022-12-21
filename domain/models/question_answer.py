@@ -3,5 +3,6 @@ from dataclasses import dataclass
 
 @dataclass
 class QuestionAnswer:
-    id: str
+    question_id: str
+    answer_id: str
     text: str
