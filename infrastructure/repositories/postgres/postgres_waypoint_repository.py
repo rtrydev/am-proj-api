@@ -1,4 +1,5 @@
 from injector import inject
+from sqlalchemy.exc import SQLAlchemyError
 
 from infrastructure.models.waypoint import Waypoint as WaypointModel
 from domain.models.waypoint import Waypoint
@@ -41,10 +42,79 @@ class PostgresWaypointRepository(WaypointRepository):
         return waypoint
 
     def add(self, waypoint: dict) -> Waypoint or None:
-        pass
+        waypoint_model = WaypointModel(
+            title=waypoint.get("title"),
+            description=waypoint.get("description"),
+            coordinateX=waypoint.get("coordinateX"),
+            coordinateY=waypoint.get("coordinateY")
+        )
+
+        result = None
+
+        try:
+            self.db.add(waypoint_model)
+        except SQLAlchemyError:
+            self.db.rollback()
+        else:
+            self.db.commit()
+            self.db.refresh(waypoint_model)
+
+            result = Waypoint(
+                id=waypoint_model.id,
+                title=waypoint_model.title,
+                description=waypoint_model.description,
+                coordinateX=waypoint_model.coordinateX,
+                coordinateY=waypoint_model.coordinateY
+            )
+        finally:
+            self.db.close()
+
+        return result
 
     def update(self, waypoint: dict, waypoint_id: str) -> Waypoint or None:
-        pass
+        waypoint_model = self.db.query(WaypointModel).filter_by(id=waypoint_id).one_or_none()
+
+        if waypoint_model is None:
+            return None
+
+        waypoint_model.title = waypoint.get("title")
+        waypoint_model.description = waypoint.get("description")
+        waypoint_model.coordinateX = waypoint.get("coordinateX")
+        waypoint_model.coordinateY = waypoint.get("coordinateY")
+
+        result = None
+
+        try:
+            self.db.add(waypoint_model)
+        except SQLAlchemyError:
+            self.db.rollback()
+        else:
+            self.db.commit()
+            self.db.refresh(waypoint_model)
+
+            result = Waypoint(
+                id=waypoint_model.id,
+                title=waypoint_model.title,
+                description=waypoint_model.description,
+                coordinateX=waypoint_model.coordinateX,
+                coordinateY=waypoint_model.coordinateY
+            )
+        finally:
+            self.db.close()
+
+        return result
 
     def delete(self, waypoint_id: str):
-        pass
+        waypoint_model = self.db.query(WaypointModel).filter_by(id=waypoint_id).one_or_none()
+
+        if waypoint_model is None:
+            return
+
+        try:
+            self.db.delete(waypoint_model)
+        except SQLAlchemyError:
+            self.db.rollback()
+        else:
+            self.db.commit()
+        finally:
+            self.db.close()

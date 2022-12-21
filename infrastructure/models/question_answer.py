@@ -1,15 +1,14 @@
-import uuid
-
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from application.extensions.database import Base
+from application.utils.uuid_generator import generate_uuid
 
 
 class QuestionAnswer(Base):
     __tablename__ = "question_answers"
 
-    id = Column(String, primary_key=True, default=uuid.uuid4)
+    id = Column(String, primary_key=True, default=generate_uuid)
     question_id = Column(String, ForeignKey("questions.id"))
     question = relationship("Question")
     user_id = Column(String, ForeignKey("users.id"))
