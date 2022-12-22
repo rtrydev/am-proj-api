@@ -99,7 +99,8 @@ class InMemoryWaypointEventRepository(WaypointEventRepository):
             "waypoint_id": event.waypoint.id,
             "user_id": event.user.id,
             "question_id": event.question.id if event.question is not None else None,
-            "state": event.state
+            "state": event.state,
+            "answer_correct": event.answer_correct
         }
 
         db["events"][event.id] = db_event
@@ -129,5 +130,6 @@ class InMemoryWaypointEventRepository(WaypointEventRepository):
             user=db_user,
             waypoint=db_waypoint,
             question=db_question,
+            answer_correct=event_data.get("answer_correct"),
             state=event_data.get("state")
         )

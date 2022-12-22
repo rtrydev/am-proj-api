@@ -59,6 +59,7 @@ class QuestionAnswers(MethodView):
 
         event_id = question_answer.get("event_id")
         question_id = question_answer.get("question_id")
+        answer_id = question_answer.get("answer_id")
 
         is_valid = self.waypoint_events_service.validate_event_question(
             event_id,
@@ -71,14 +72,14 @@ class QuestionAnswers(MethodView):
 
         result = self.question_answers_repository.add(
             question_id,
-            question_answer.get("answer_id"),
+            answer_id,
             user_id
         )
 
         if result is None:
             return Response(status=403)
 
-        self.waypoint_events_service.finish_event(event_id, user_id)
+        self.waypoint_events_service.finish_event(event_id, user_id, answer_id)
 
         return Response(status=201)
 

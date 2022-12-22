@@ -11,7 +11,7 @@ class WaypointEventServiceInterface(ABC):
         pass
 
     @abstractmethod
-    def finish_event(self, event_id, user_id):
+    def finish_event(self, event_id, user_id, answer_id):
         pass
 
     @abstractmethod

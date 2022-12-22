@@ -13,4 +13,5 @@ class WaypointEvent:
     waypoint: Waypoint
     user: User
     question: Question or None
+    answer_correct: bool or None
     state: EventStates

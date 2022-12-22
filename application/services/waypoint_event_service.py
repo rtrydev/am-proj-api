@@ -80,6 +80,7 @@ class WaypointEventService(WaypointEventServiceInterface):
             waypoint=waypoint,
             user=user,
             question=None,
+            answer_correct=None,
             state=EventStates.Initialized
         )
 
@@ -87,13 +88,16 @@ class WaypointEventService(WaypointEventServiceInterface):
 
         return result
 
-    def finish_event(self, event_id, user_id):
+    def finish_event(self, event_id, user_id, answer_id):
         event = self.waypoint_event_repository.get_by_id(event_id)
 
         if event is None:
             return None
 
+        answer_correct = answer_id == event.question.correct_answer_id
+
         event.state = EventStates.Finished
+        event.answer_correct = answer_correct
 
         result = self.waypoint_event_repository.update(event)
 
@@ -127,6 +131,7 @@ class WaypointEventService(WaypointEventServiceInterface):
             {
                 "id": event.id,
                 "waypoint_id": event.waypoint.id,
-                "state": event.state
+                "state": event.state,
+                "answer_correct": event.answer_correct
             } for event in events
         ]
