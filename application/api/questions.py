@@ -22,6 +22,7 @@ class Waypoints(MethodView):
         self.questions_repository = questions_repository
 
     @questions.response(200, QuestionReadSchema(many=True))
+    @auth(Roles.Admin)
     def get(self):
         return self.questions_repository.get_all()
 
