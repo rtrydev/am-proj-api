@@ -101,6 +101,7 @@ class WaypointEventService(WaypointEventServiceInterface):
 
     def validate_event_question(self, event_id, question_id, user_id):
         event = self.waypoint_event_repository.get_by_id(event_id)
+        time_for_answer = 65
 
         if event is None:
             return False
@@ -112,6 +113,10 @@ class WaypointEventService(WaypointEventServiceInterface):
             return False
 
         if event.user.id != user_id:
+            return False
+
+        current_timestamp = datetime.datetime.now().timestamp()
+        if event.timestamp < current_timestamp - time_for_answer:
             return False
 
         return True
