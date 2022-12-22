@@ -52,9 +52,13 @@ class WaypointsById(MethodView):
         if result is None:
             return Response(status=404)
 
-        result_json = json.dumps(dataclasses.asdict(result))
+        question = {
+            "id": result.id,
+            "answers": result.answers,
+            "contents": result.contents
+        }
 
-        return Response(result_json, status=200, mimetype="application/json")
+        return Response(json.dumps(question), status=200, mimetype="application/json")
 
     @questions.arguments(QuestionWriteSchema)
     @questions.response(200)

@@ -100,4 +100,4 @@ class Users(MethodView):
             "role": user.role
         }
 
-        return Response(json.dumps(result), 200)
+        return Response(json.dumps(result), 200, mimetype="application/json")

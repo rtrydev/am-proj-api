@@ -2,6 +2,7 @@ import uuid
 
 from injector import inject
 
+from domain.models.question_answer import QuestionAnswer
 from domain.repositories.question_answers_repository import QuestionAnswersRepository
 from infrastructure.database.database_provider import DatabaseProvider
 
@@ -11,7 +12,7 @@ class InMemoryQuestionAnswersRepository(QuestionAnswersRepository):
     def __init__(self, db_provider: DatabaseProvider):
         self.db_provider = db_provider
 
-    def get_answers_for_user(self, user_id):
+    def get_answers_for_user(self, user_id) -> list[QuestionAnswer]:
         db = self.db_provider.get_db()
 
         if db is None or db.get("question_answers") is None:
@@ -31,7 +32,7 @@ class InMemoryQuestionAnswersRepository(QuestionAnswersRepository):
 
         return answers_for_user
 
-    def add(self, question_id, answer_id, user_id):
+    def add(self, question_id, answer_id, user_id) -> QuestionAnswer or None:
         db = self.db_provider.get_db()
 
         if db is None or db.get("question_answers") is None:

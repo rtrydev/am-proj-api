@@ -11,6 +11,7 @@ from application.decorators.auth_decorator import auth
 from application.schemas.question_answer_schema import QuestionAnswerSchema
 from domain.enums.roles import Roles
 from domain.repositories.question_answers_repository import QuestionAnswersRepository
+from domain.services.waypoint_event_service import WaypointEventServiceInterface
 
 question_answers = Blueprint('question_answers_routes', __name__, url_prefix='/question_answers')
 
@@ -18,8 +19,12 @@ question_answers = Blueprint('question_answers_routes', __name__, url_prefix='/q
 @question_answers.route("/")
 class QuestionAnswers(MethodView):
     @inject
-    def __init__(self, question_answers_repository: QuestionAnswersRepository):
+    def __init__(self,
+                 question_answers_repository: QuestionAnswersRepository,
+                 waypoint_events_service: WaypointEventServiceInterface,
+                 ):
         self.question_answers_repository = question_answers_repository
+        self.waypoint_events_service = waypoint_events_service
 
     @question_answers.response(200, QuestionAnswerSchema(many=True))
     @question_answers.response(401)
@@ -52,14 +57,28 @@ class QuestionAnswers(MethodView):
         if user_id is None:
             return Response(status=403)
 
+        event_id = question_answer.get("event_id")
+        question_id = question_answer.get("question_id")
+
+        is_valid = self.waypoint_events_service.validate_event_question(
+            event_id,
+            question_id,
+            user_id
+        )
+
+        if not is_valid:
+            return Response(status=403)
+
         result = self.question_answers_repository.add(
-            question_answer.get("question_id"),
+            question_id,
             question_answer.get("answer_id"),
             user_id
         )
 
         if result is None:
             return Response(status=403)
+
+        self.waypoint_events_service.finish_event(event_id, user_id)
 
         return Response(status=201)
 

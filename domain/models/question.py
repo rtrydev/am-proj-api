@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
-from domain.models.question_answer import QuestionAnswer
+from domain.models.answer import Answer
 
 
 @dataclass
 class Question:
     id: str
     contents: str
-    answers: list[QuestionAnswer]
+    answers: list[Answer]
     correct_answer_id: str
