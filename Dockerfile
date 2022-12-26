@@ -1,6 +1,5 @@
 FROM python:3.10-slim-bullseye
 EXPOSE 80
-EXPOSE 443
 
 WORKDIR /app
 RUN apt update
