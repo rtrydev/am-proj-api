@@ -21,11 +21,12 @@ class InMemoryQuestionAnswersRepository(QuestionAnswersRepository):
         all_answers = db["question_answers"]
 
         answers_for_user = [
-            {
-                "id": key,
-                "question_id": answer.get("question_id"),
-                "answer_id": answer.get("answer_id")
-            }
+            QuestionAnswer(
+                id=key,
+                question_id=answer.get("question_id"),
+                answer_id=answer.get("answer_id"),
+                user_id=answer.get("user_id")
+            )
             for key, answer in all_answers.items()
             if answer.get("user_id") == user_id
         ]
@@ -58,9 +59,12 @@ class InMemoryQuestionAnswersRepository(QuestionAnswersRepository):
         answer = {
             "user_id": user_id,
             "question_id": question_id,
-            "answer_id": answer_id
+            "answer_id": answer_id,
         }
 
         db["question_answers"][entry_id] = answer
 
-        return answer
+        return QuestionAnswer(
+            id=entry_id,
+            **answer
+        )

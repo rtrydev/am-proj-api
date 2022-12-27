@@ -15,4 +15,6 @@ class QuestionAnswer(Base):
     question = relationship("Question")
     user_id = Column(String, ForeignKey("users.id"))
     user = relationship("User", back_populates="question_answers")
-    text = Column(String)
+    answer_id = Column(String, ForeignKey("answers.id"))
+    answer = relationship("Answer")
+

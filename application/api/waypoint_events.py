@@ -89,7 +89,7 @@ class WaypointEventsQuestion(MethodView):
 
         question = {
             "id": result.id,
-            "answers": result.answers,
+            "answers": [dataclasses.asdict(answer) for answer in result.answers],
             "contents": result.contents
         }
 

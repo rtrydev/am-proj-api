@@ -12,6 +12,7 @@ from infrastructure.models.question_answer import QuestionAnswer
 from infrastructure.models.question import Question
 from infrastructure.models.waypoint import Waypoint
 from infrastructure.models.answer import Answer
+from infrastructure.models.waypoint_event import WaypointEvent
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -32,7 +33,10 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-config.set_main_option("sqlalchemy.url", os.environ.get("PERSISTENT_DB_CONNECTION_STRING"))
+connection_string = os.environ.get("PERSISTENT_DB_CONNECTION_STRING")
+
+if connection_string is not None:
+    config.set_main_option("sqlalchemy.url", connection_string)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

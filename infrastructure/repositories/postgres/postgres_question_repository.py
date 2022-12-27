@@ -3,6 +3,7 @@ import uuid
 from injector import inject
 from sqlalchemy.exc import SQLAlchemyError
 
+from domain.models.answer import Answer
 from infrastructure.models.question import Question as QuestionModel
 from infrastructure.models.answer import Answer as AnswerModel
 
@@ -23,7 +24,12 @@ class PostgresQuestionRepository(QuestionRepository):
             Question(
                 id=item.id,
                 contents=item.contents,
-                answers=item.answers,
+                answers=[
+                    Answer(
+                        id=answer.id,
+                        text=answer.text
+                    ) for answer in item.answers
+                ],
                 correct_answer_id=item.correct_answer_id
             ) for item in result
         ]
@@ -37,7 +43,12 @@ class PostgresQuestionRepository(QuestionRepository):
         question = Question(
             id=result.id,
             contents=result.contents,
-            answers=result.answers,
+            answers=[
+                Answer(
+                    id=answer.id,
+                    text=answer.text
+                ) for answer in result.answers
+            ],
             correct_answer_id=result.correct_answer_id
         )
 
