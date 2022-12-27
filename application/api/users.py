@@ -70,7 +70,8 @@ class UsersRegister(MethodView):
             json.dumps({
                 "auth_token": token
             }),
-            status=200
+            status=200,
+            mimetype="application/json"
         )
 
 

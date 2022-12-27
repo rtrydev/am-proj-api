@@ -4,6 +4,8 @@ from sqlalchemy.orm import relationship
 from application.extensions.database import Base
 from application.utils.uuid_generator import generate_uuid
 
+from infrastructure.models.question import Question
+
 
 class QuestionAnswer(Base):
     __tablename__ = "question_answers"
