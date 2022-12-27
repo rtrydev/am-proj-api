@@ -18,6 +18,7 @@ from infrastructure.repositories.in_memory.in_memory_question_repository import 
 from infrastructure.repositories.in_memory.in_memory_users_repository import InMemoryUsersRepository
 from infrastructure.repositories.in_memory.in_memory_waypoint_event_repository import InMemoryWaypointEventRepository
 from infrastructure.repositories.in_memory.in_memory_waypoint_repository import InMemoryWaypointRepository
+from infrastructure.repositories.postgres.postgres_question_repository import PostgresQuestionRepository
 from infrastructure.repositories.postgres.postgres_users_repository import PostgresUsersRepository
 from infrastructure.repositories.postgres.postgres_waypoint_repository import PostgresWaypointRepository
 from application.services.jwt_service import JwtService
@@ -50,6 +51,4 @@ def _bind_persistent_db(binder):
     binder.bind(DatabaseProvider, to=PostgresDatabaseProvider, scope=singleton)
     binder.bind(WaypointRepository, to=PostgresWaypointRepository, scope=singleton)
     binder.bind(UsersRepository, to=PostgresUsersRepository, scope=singleton)
-
-
-
+    binder.bind(QuestionRepository, to=PostgresQuestionRepository, scope=singleton)

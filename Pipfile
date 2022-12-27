@@ -14,9 +14,9 @@ bcrypt = "4.0.1"
 sqlalchemy = "1.4.45"
 flask-sqlalchemy = "3.0.2"
 psycopg2-binary = "2.9.5"
+alembic = "1.9.0"
 
 [dev-packages]
-alembic = "1.9.0"
 
 [requires]
 python_version = "3.10"

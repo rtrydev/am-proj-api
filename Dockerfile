@@ -13,4 +13,4 @@ RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy --system
 
 COPY . .
 
-ENTRYPOINT python -u server.py
+ENTRYPOINT alembic upgrade head && python -u server.py

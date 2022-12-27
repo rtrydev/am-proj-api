@@ -1,0 +1,40 @@
+version: "3.6"
+
+services:
+  db:
+    image: postgres
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "amdb"
+      POSTGRES_PASSWORD: "mysecretpassword"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+  api:
+    container_name: api
+    restart: unless-stopped
+    tty: true
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      PERSISTENT_DB: "true"
+      PERSISTENT_DB_CONNECTION_STRING: "postgresql://postgres:mysecretpassword@db/amdb"
+      JWT_SECRET: "mysupersecret"
+    depends_on:
+      - db
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  dbdata:
+    driver: local
