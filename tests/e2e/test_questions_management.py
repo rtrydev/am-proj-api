@@ -1,8 +1,18 @@
+import pytest
 import requests
+import subprocess
+import time
 
 apiUrl = "http://localhost:5000"
 
 
+@pytest.fixture(autouse=True)
+def run_around_tests():
+    subprocess.call(['sh', './tests/e2e/reset_database.sh'])
+    time.sleep(2)
+
+
+@pytest.mark.e2e
 def test_questions_management_success():
     question_data = {
         "contents": "How much is 2+5?",

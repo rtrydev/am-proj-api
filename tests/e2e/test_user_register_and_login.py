@@ -1,8 +1,18 @@
+import pytest
 import requests
+import subprocess
+import time
 
 apiUrl = "http://localhost:5000"
 
 
+@pytest.fixture(autouse=True)
+def run_around_tests():
+    subprocess.call(['sh', './tests/e2e/reset_database.sh'])
+    time.sleep(2)
+
+
+@pytest.mark.e2e
 def test_user_register_and_login_success():
     user_data = {
         "username": "testuser",
@@ -36,6 +46,7 @@ def test_user_register_and_login_success():
     assert user == expected
 
 
+@pytest.mark.e2e
 def test_user_login_incorrect_credentials_fail():
     user_data = {
         "username": "somenonexistent",
@@ -47,6 +58,7 @@ def test_user_login_incorrect_credentials_fail():
     assert login_response.status_code == 404
 
 
+@pytest.mark.e2e
 def test_get_user_unauthorized_fail():
     get_user_response = requests.get(f"{apiUrl}/users")
 

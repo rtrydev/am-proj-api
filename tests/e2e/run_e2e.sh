@@ -3,6 +3,10 @@
 ./setup.sh
 sleep 2
 
-pytest test_*.py
+cd ../..
+
+pytest -m e2e
+
+cd -
 
 ./teardown.sh
