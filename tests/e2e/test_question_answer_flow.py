@@ -102,3 +102,19 @@ def test_question_answer_flow():
                                            })
 
     assert answer_question_result.status_code == 201
+
+    get_answers_for_user_result = requests.get(f"{apiUrl}/question_answers",
+                                               headers={
+                                                   "Authorization": f"Bearer {user_token}"
+                                               })
+
+    assert get_answers_for_user_result.status_code == 200
+    assert len(get_answers_for_user_result.json()) == 1
+
+    get_events_for_user_result = requests.get(f"{apiUrl}/question_answers",
+                                              headers={
+                                                  "Authorization": f"Bearer {user_token}"
+                                              })
+
+    assert get_events_for_user_result.status_code == 200
+    assert len(get_events_for_user_result.json()) == 1
