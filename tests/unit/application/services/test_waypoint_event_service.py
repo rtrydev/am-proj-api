@@ -1,4 +1,5 @@
 import unittest
+import datetime
 from unittest.mock import Mock, MagicMock, call
 
 import pytest
@@ -511,3 +512,259 @@ class TestWaypointEventService(unittest.TestCase):
         )
 
         assert result is None
+
+    @pytest.mark.unit
+    def test_validate_event_question__success(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=WaypointEvent(
+                id="test",
+                timestamp=int(datetime.datetime.now().timestamp()),
+                waypoint=Waypoint(
+                    id="test",
+                    coordinateX=123.312,
+                    coordinateY=33.123,
+                    description="test",
+                    title="way1"
+                ),
+                state=EventStates.QuestionReceived,
+                answer_correct=None,
+                question=Question(
+                    id="test",
+                    answers=[
+                        Answer(
+                            id="test1",
+                            text="a1"
+                        ),
+                        Answer(
+                            id="test2",
+                            text="a2"
+                        ),
+                        Answer(
+                            id="test3",
+                            text="a3"
+                        )
+                    ],
+                    contents="test",
+                    correct_answer_id="test1"
+                ),
+                user=User(
+                    id="user1",
+                    username="usertest",
+                    password=None,
+                    question_answers=[],
+                    role=Roles.User
+                )
+            )
+        )
+
+        result = self.waypoint_event_service.validate_event_question(
+            "test",
+            "test",
+            "user1"
+        )
+
+        assert result is True
+
+    @pytest.mark.unit
+    def test_validate_event_question__no_event__fail(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=None
+        )
+
+        result = self.waypoint_event_service.validate_event_question(
+            "test",
+            "test",
+            "user1"
+        )
+
+        assert result is False
+
+    @pytest.mark.unit
+    def test_validate_event_question__no_question__fail(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=WaypointEvent(
+                id="test",
+                timestamp=int(datetime.datetime.now().timestamp()),
+                waypoint=Waypoint(
+                    id="test",
+                    coordinateX=123.312,
+                    coordinateY=33.123,
+                    description="test",
+                    title="way1"
+                ),
+                state=EventStates.QuestionReceived,
+                answer_correct=None,
+                question=None,
+                user=User(
+                    id="user1",
+                    username="usertest",
+                    password=None,
+                    question_answers=[],
+                    role=Roles.User
+                )
+            )
+        )
+
+        result = self.waypoint_event_service.validate_event_question(
+            "test",
+            "test",
+            "user1"
+        )
+
+        assert result is False
+
+    @pytest.mark.unit
+    def test_validate_event_question__wrong_question_id__fail(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=WaypointEvent(
+                id="test",
+                timestamp=int(datetime.datetime.now().timestamp()),
+                waypoint=Waypoint(
+                    id="test",
+                    coordinateX=123.312,
+                    coordinateY=33.123,
+                    description="test",
+                    title="way1"
+                ),
+                state=EventStates.QuestionReceived,
+                answer_correct=None,
+                question=Question(
+                    id="anotherid",
+                    answers=[
+                        Answer(
+                            id="test1",
+                            text="a1"
+                        ),
+                        Answer(
+                            id="test2",
+                            text="a2"
+                        ),
+                        Answer(
+                            id="test3",
+                            text="a3"
+                        )
+                    ],
+                    contents="test",
+                    correct_answer_id="test1"
+                ),
+                user=User(
+                    id="user1",
+                    username="usertest",
+                    password=None,
+                    question_answers=[],
+                    role=Roles.User
+                )
+            )
+        )
+
+        result = self.waypoint_event_service.validate_event_question(
+            "test",
+            "test",
+            "user1"
+        )
+
+        assert result is False
+
+    @pytest.mark.unit
+    def test_validate_event_question__wrong_user_id__fail(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=WaypointEvent(
+                id="test",
+                timestamp=int(datetime.datetime.now().timestamp()),
+                waypoint=Waypoint(
+                    id="test",
+                    coordinateX=123.312,
+                    coordinateY=33.123,
+                    description="test",
+                    title="way1"
+                ),
+                state=EventStates.QuestionReceived,
+                answer_correct=None,
+                question=Question(
+                    id="test",
+                    answers=[
+                        Answer(
+                            id="test1",
+                            text="a1"
+                        ),
+                        Answer(
+                            id="test2",
+                            text="a2"
+                        ),
+                        Answer(
+                            id="test3",
+                            text="a3"
+                        )
+                    ],
+                    contents="test",
+                    correct_answer_id="test1"
+                ),
+                user=User(
+                    id="anotheruser",
+                    username="usertest",
+                    password=None,
+                    question_answers=[],
+                    role=Roles.User
+                )
+            )
+        )
+
+        result = self.waypoint_event_service.validate_event_question(
+            "test",
+            "test",
+            "user1"
+        )
+
+        assert result is False
+
+    @pytest.mark.unit
+    def test_validate_event_question__out_of_time__fail(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=WaypointEvent(
+                id="test",
+                timestamp=int(datetime.datetime.now().timestamp()) - 70,
+                waypoint=Waypoint(
+                    id="test",
+                    coordinateX=123.312,
+                    coordinateY=33.123,
+                    description="test",
+                    title="way1"
+                ),
+                state=EventStates.QuestionReceived,
+                answer_correct=None,
+                question=Question(
+                    id="test",
+                    answers=[
+                        Answer(
+                            id="test1",
+                            text="a1"
+                        ),
+                        Answer(
+                            id="test2",
+                            text="a2"
+                        ),
+                        Answer(
+                            id="test3",
+                            text="a3"
+                        )
+                    ],
+                    contents="test",
+                    correct_answer_id="test1"
+                ),
+                user=User(
+                    id="user1",
+                    username="usertest",
+                    password=None,
+                    question_answers=[],
+                    role=Roles.User
+                )
+            )
+        )
+
+        result = self.waypoint_event_service.validate_event_question(
+            "test",
+            "test",
+            "user1"
+        )
+
+        assert result is False
