@@ -768,3 +768,60 @@ class TestWaypointEventService(unittest.TestCase):
         )
 
         assert result is False
+
+    @pytest.mark.unit
+    def test_get_events_for_user__return_events(self):
+        self.waypoint_event_repository.get_waypoint_events_for_user = MagicMock(
+            return_value=[
+                WaypointEvent(
+                    id="test",
+                    timestamp=int(datetime.datetime.now().timestamp()),
+                    waypoint=Waypoint(
+                        id="test",
+                        coordinateX=123.312,
+                        coordinateY=33.123,
+                        description="test",
+                        title="way1"
+                    ),
+                    state=EventStates.QuestionReceived,
+                    answer_correct=None,
+                    question=Question(
+                        id="test",
+                        answers=[
+                            Answer(
+                                id="test1",
+                                text="a1"
+                            ),
+                            Answer(
+                                id="test2",
+                                text="a2"
+                            ),
+                            Answer(
+                                id="test3",
+                                text="a3"
+                            )
+                        ],
+                        contents="test",
+                        correct_answer_id="test1"
+                    ),
+                    user=User(
+                        id="user1",
+                        username="usertest",
+                        password=None,
+                        question_answers=[],
+                        role=Roles.User
+                    )
+                )
+            ]
+        )
+
+        result = self.waypoint_event_service.get_events_for_user("user1")
+
+        assert result == [
+            {
+                "id": "test",
+                "waypoint_id": "test",
+                "state": EventStates.QuestionReceived,
+                "answer_correct": None
+            }
+        ]
