@@ -399,3 +399,115 @@ class TestWaypointEventService(unittest.TestCase):
         )
 
         assert event_init_result is None
+
+    @pytest.mark.unit
+    def test_finish_event__success(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=WaypointEvent(
+                id="test",
+                timestamp=123123,
+                waypoint=Waypoint(
+                    id="test",
+                    coordinateX=123.312,
+                    coordinateY=33.123,
+                    description="test",
+                    title="way1"
+                ),
+                state=EventStates.QuestionReceived,
+                answer_correct=None,
+                question=Question(
+                    id="test",
+                    answers=[
+                        Answer(
+                            id="test1",
+                            text="a1"
+                        ),
+                        Answer(
+                            id="test2",
+                            text="a2"
+                        ),
+                        Answer(
+                            id="test3",
+                            text="a3"
+                        )
+                    ],
+                    contents="test",
+                    correct_answer_id="test1"
+                ),
+                user=User(
+                    id="user1",
+                    username="usertest",
+                    password=None,
+                    question_answers=[],
+                    role=Roles.User
+                )
+            )
+        )
+
+        self.waypoint_event_repository.update = Mock()
+
+        result = self.waypoint_event_service.finish_event(
+            "test",
+            "usertest",
+            "test2"
+        )
+
+        assert result is not None
+        self.waypoint_event_repository.update.assert_has_calls(
+            [call(
+                WaypointEvent(
+                    id="test",
+                    timestamp=123123,
+                    waypoint=Waypoint(
+                        id="test",
+                        coordinateX=123.312,
+                        coordinateY=33.123,
+                        description="test",
+                        title="way1"
+                    ),
+                    state=EventStates.Finished,
+                    answer_correct=False,
+                    question=Question(
+                        id="test",
+                        answers=[
+                            Answer(
+                                id="test1",
+                                text="a1"
+                            ),
+                            Answer(
+                                id="test2",
+                                text="a2"
+                            ),
+                            Answer(
+                                id="test3",
+                                text="a3"
+                            )
+                        ],
+                        contents="test",
+                        correct_answer_id="test1"
+                    ),
+                    user=User(
+                        id="user1",
+                        username="usertest",
+                        password=None,
+                        question_answers=[],
+                        role=Roles.User
+                    )
+                )
+            )]
+        )
+
+    @pytest.mark.unit
+    def test_finish_event__no_event__fail(self):
+        self.waypoint_event_repository.get_by_id = MagicMock(
+            return_value=None
+        )
+        self.waypoint_event_repository.update = Mock()
+
+        result = self.waypoint_event_service.finish_event(
+            "test",
+            "usertest",
+            "test1"
+        )
+
+        assert result is None
