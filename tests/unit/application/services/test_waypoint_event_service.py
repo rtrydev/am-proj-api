@@ -270,3 +270,132 @@ class TestWaypointEventService(unittest.TestCase):
         )
 
         assert random_question is None
+
+    @pytest.mark.unit
+    def test_init_waypoint_event__success(self):
+        self.users_repository.get_by_id = MagicMock(
+            return_value=User(
+                id="testuser",
+                username="test",
+                password=None,
+                question_answers=[],
+                role=Roles.User
+            )
+        )
+
+        self.waypoint_repository.get_by_id = MagicMock(
+            return_value=Waypoint(
+                id="test",
+                coordinateX=123.312,
+                coordinateY=33.123,
+                description="test",
+                title="way1"
+            )
+        )
+
+        self.waypoint_event_repository.event_for_waypoint_exists = MagicMock(
+            return_value=False
+        )
+
+        self.waypoint_event_repository.add = Mock()
+
+        event_init_result = self.waypoint_event_service.init_waypoint_event(
+            "test",
+            "testuser"
+        )
+
+        assert event_init_result is not None
+        assert self.waypoint_event_repository.add.called
+
+    @pytest.mark.unit
+    def test_init_waypoint_event__missing_user__fail(self):
+        self.users_repository.get_by_id = MagicMock(
+            return_value=None
+        )
+
+        self.waypoint_repository.get_by_id = MagicMock(
+            return_value=Waypoint(
+                id="test",
+                coordinateX=123.312,
+                coordinateY=33.123,
+                description="test",
+                title="way1"
+            )
+        )
+
+        self.waypoint_event_repository.event_for_waypoint_exists = MagicMock(
+            return_value=False
+        )
+
+        self.waypoint_event_repository.add = Mock()
+
+        event_init_result = self.waypoint_event_service.init_waypoint_event(
+            "test",
+            "testuser"
+        )
+
+        assert event_init_result is None
+
+    @pytest.mark.unit
+    def test_init_waypoint_event__missing_waypoint__fail(self):
+        self.users_repository.get_by_id = MagicMock(
+            return_value=User(
+                id="testuser",
+                username="test",
+                password=None,
+                question_answers=[],
+                role=Roles.User
+            )
+        )
+
+        self.waypoint_repository.get_by_id = MagicMock(
+            return_value=None
+        )
+
+        self.waypoint_event_repository.event_for_waypoint_exists = MagicMock(
+            return_value=False
+        )
+
+        self.waypoint_event_repository.add = Mock()
+
+        event_init_result = self.waypoint_event_service.init_waypoint_event(
+            "test",
+            "testuser"
+        )
+
+        assert event_init_result is None
+
+    @pytest.mark.unit
+    def test_init_waypoint_event__event_exists__fail(self):
+        self.users_repository.get_by_id = MagicMock(
+            return_value=User(
+                id="testuser",
+                username="test",
+                password=None,
+                question_answers=[],
+                role=Roles.User
+            )
+        )
+
+        self.waypoint_repository.get_by_id = MagicMock(
+            return_value=Waypoint(
+                id="test",
+                coordinateX=123.312,
+                coordinateY=33.123,
+                description="test",
+                title="way1"
+            )
+        )
+
+        self.waypoint_event_repository.event_for_waypoint_exists = MagicMock(
+            return_value=True
+        )
+
+        self.waypoint_event_repository.add = Mock()
+
+        event_init_result = self.waypoint_event_service.init_waypoint_event(
+            "test",
+            "testuser"
+        )
+
+        assert event_init_result is None
