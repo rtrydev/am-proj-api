@@ -3,14 +3,14 @@ from unittest.mock import Mock, MagicMock, call
 
 import pytest
 
-from application.services.waypoint_event_service import WaypointEventService
-from domain.enums.event_states import EventStates
-from domain.enums.roles import Roles
-from domain.models.answer import Answer
-from domain.models.question import Question
-from domain.models.user import User
-from domain.models.waypoint import Waypoint
-from domain.models.waypoint_event import WaypointEvent
+from src.application.services.waypoint_event_service import WaypointEventService
+from src.domain.enums.event_states import EventStates
+from src.domain.enums.roles import Roles
+from src.domain.models.answer import Answer
+from src.domain.models.question import Question
+from src.domain.models.user import User
+from src.domain.models.waypoint import Waypoint
+from src.domain.models.waypoint_event import WaypointEvent
 
 
 class TestWaypointEventService(unittest.TestCase):

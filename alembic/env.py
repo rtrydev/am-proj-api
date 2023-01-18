@@ -6,13 +6,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from application.extensions.database import Base
-from infrastructure.models.user import User
-from infrastructure.models.question_answer import QuestionAnswer
-from infrastructure.models.question import Question
-from infrastructure.models.waypoint import Waypoint
-from infrastructure.models.answer import Answer
-from infrastructure.models.waypoint_event import WaypointEvent
+from src.application.extensions.database import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
